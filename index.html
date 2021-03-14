@@ -21,12 +21,13 @@
         import {OrbitControls} from "https://unpkg.com/three/examples/jsm/controls/OrbitControls.js";
         import Stats from "https://unpkg.com/three/examples/jsm/libs/stats.module.js";
         import dat from "https://unpkg.com/three@0.126.1/examples/jsm/libs/dat.gui.module.js";
+        import {DragControls} from "https://unpkg.com/three@0.126.1/examples/jsm/controls/DragControls.js"
 
 
 
         "use strict";
 
-        let renderer, scene, camera, cameraControls, mesh, stats;
+        let renderer, scene, camera, cameraControls, mesh, stats, world, dragControls;
 
         function init() {
             // RENDERER ENGINE
@@ -44,30 +45,45 @@
             let near = 0.1;
             let far = 10000;
             camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-            camera.position.set(0, 0, 3);
+            camera.position.set(1, 1, 10);
+            camera.lookAt(new THREE.Vector3(0,0,0));
             cameraControls = new OrbitControls(camera, renderer.domElement);
 
+            let normal = new THREE.Vector3(0, 1, 0);
+            let distanceToPlane = 0.;
+            let plane = new THREE.Plane(normal, distanceToPlane);
+            let size = 10;
+            let color = "grey";
+            let planeHelper = new THREE.PlaneHelper(plane, size, color);
             // MODELS
             let geometry3 = new THREE.ConeGeometry();
             let geometry2 = new THREE.SphereGeometry();
             let geometry = new THREE.BoxGeometry();
+            //let plane = new THREE.PlaneGeometry( 5, 20, 32 );
             let material = new THREE.MeshBasicMaterial({color: "white", wireframe: true});
-            mesh = new THREE.Mesh(geometry, material);
+            mesh = new THREE.Mesh(plane, material);
             //mesh2 = new THREE.Mesh(geometry2, material);
             mesh.name = "Cube";
 
             // SCENE GRAPH
-            scene.add(mesh);
-            
+            scene.add(planeHelper);
+
             // GUI
             let gui = new dat.GUI();
 
+            let objectArr=[];
+
             //Objects
             let objects = {
-                cube: true,
+                cube: false,
                 sphere: false,
                 cone: false,
             }
+
+            //controls to drag
+            dragControls = new DragControls(objectArr, camera, renderer.domElement);
+            dragControls.addEventListener( 'dragstart', function () { cameraControls.enabled = false; } );
+		    dragControls.addEventListener( 'dragend', function () { cameraControls.enabled = true; } );
 
             // model
             let model = {
@@ -84,44 +100,57 @@
                 colorPalette: [1, 1, 1]
             }
 
+    
+
 
             // General Info Menu
             let generalMenu = gui.addFolder("Select Object");
             let Cube = generalMenu.add(objects, "cube").listen().name("Cube").listen().onChange(function() {
-                scene.remove(mesh)
                 objects.cube=true;
                 objects.sphere=false;
                 objects.cone=false;
                 mesh = new THREE.Mesh(geometry, material);
                 scene.add(mesh)
+                objectArr.push(mesh);
             });
             let sphere = generalMenu.add(objects, "sphere").listen().name("Sphere").onChange(function() {
-                scene.remove(mesh)
                 objects.cube=false;
                 objects.sphere=true;
                 objects.cone=false;
                 mesh = new THREE.Mesh(geometry2, material);
                 scene.add(mesh)
+                //world.add(mesh);
+                objectArr.push(mesh);
             });
             let cone = generalMenu.add(objects, "cone").listen().name("Cone").listen().onChange(function() {
-                scene.remove(mesh)
                 objects.cube=false;
                 objects.sphere=false;
                 objects.cone=true;
                 mesh = new THREE.Mesh(geometry3, material);
                 scene.add(mesh)
+                objectArr.push(mesh);
             });
+            
 
+            
             // Position Menu
             let positionMenu = gui.addFolder("Model's Position Menu");
-            let sliderPosX = positionMenu.add(mesh.position, "x").min(-5).max(5).step(0.5).setValue(0).name("X").listen().onChange(function(value) {
+            let sliderPosX = positionMenu.add(mesh.position, "x").min(-10).max(10).step(0.5).setValue(0).name("X").listen().onChange(function(value) {
                 mesh.position.x = value;
+            });
+            let sliderPosY = positionMenu.add(mesh.position, "y").min(-10).max(10).step(0.5).setValue(0).name("Y").listen().onChange(function(value) {
+                mesh.position.y = value;
+                
+            });
+            let sliderPosZ = positionMenu.add(mesh.position, "z").min(-10).max(10).step(0.5).setValue(0).name("Z").listen().onChange(function(value) {
+                mesh.position.z = value;
+                
             });
             let btnPosHome = positionMenu.add(model, "posHome").name("HOME").onChange(function(event) {
 
             });
 
-                // Orientation Menu
+            // Orientation Menu
             let rotMenu = gui.addFolder("Model's Rotation Menu");
             let sliderRotY = rotMenu.add(model, "rotY").min(-180).max(180).step(10).setValue(0).name("Y (deg)").listen().onChange(function(value) {
                 mesh.rotation.y = model.rotY * Math.PI / 180;
@@ -131,9 +160,9 @@
 
             });
 
-                // Appearance Menu
-                let appearMenu = gui.addFolder("Model's Appearance Menu");
-                let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe").onChange(function(value) {});
+            // Appearance Menu
+            let appearMenu = gui.addFolder("Model's Appearance Menu");
+            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe").onChange(function(value) {});
             let listColors = appearMenu.add(model, "defaultItem", model.listColors).name("Color List").onChange(function(item) {
                 mesh.material.color = new THREE.Color(model.defaultItem.toLowerCase());
                 model.colorPalette = [mesh.material.color.r * 255, mesh.material.color.g * 255, mesh.material.color.b * 255];
@@ -142,14 +171,19 @@
                 mesh.material.color = new THREE.Color(color[0]/255, color[1]/255, color[2]/255);
             });
 
-            // STATS
+            //Plane Menu
+            let planeMenu=gui.addFolder("Plane");
+            let chbPlaneHelper = planeMenu.add(planeHelper, "visible").setValue(false).name("PlaneHelper");
+
+            //Stats
             stats = new Stats();
             stats.showPanel(0); // FPS
             document.body.appendChild(stats.dom);
 
+
             // ANIMATION
             renderLoop();
-
+            
             // Appearance Menu
 
 
@@ -160,11 +194,11 @@
 
         function renderLoop() {
             stats.begin();
-            renderer.render(scene, camera); // DRAW SCENE
             updateScene();
             stats.end();
             stats.update();
             requestAnimationFrame(renderLoop);
+            renderer.render(scene, camera); // DRAW SCENE
         }
 
         function updateScene() {
@@ -174,12 +208,14 @@
 
         // EVENT LISTENERS & HANDLERS
         document.addEventListener("DOMContentLoaded", init);
+        
 
         window.addEventListener("resize", function() {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
         });
+
     </script>
 </body>
 </html>
