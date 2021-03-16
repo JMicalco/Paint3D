@@ -98,6 +98,7 @@
                 defaultItem: "White",
                 colorPalette: [1, 1, 1],
                 showStats: true,
+                wireframe: true,
                 bgColor: 0x000,
             }
 
@@ -164,14 +165,14 @@
 
             // Appearance Menu
             let appearMenu = gui.addFolder("Model's Appearance Menu");
-            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(false).name("Wireframe").listen().onChange(function(value) {
-                if (mesh.material.wireframe==true) {
-                    mesh.material.wireframe=false;
-                } else if(mesh.material.wireframe==false){
-                    mesh.material.wireframe=true;
-                }
-                
-            });
+            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe")
+                .onChange(val => {
+                    if (val) {
+                        mesh.material.wireframe = true;
+                    }else{
+                        mesh.material.wireframe = false;
+                    }
+                })
             /*let listColors = appearMenu.add(model, "defaultItem", model.listColors).name("Color List").onChange(function(item) {
                 mesh.material.color = new THREE.Color(model.defaultItem.toLowerCase());
                 model.colorPalette = [mesh.material.color.r * 255, mesh.material.color.g * 255, mesh.material.color.b * 255];
@@ -208,7 +209,6 @@
                 })
             planeMenu.addColor(model, "bgColor").listen().name('Background Color').onChange(val => renderer.setClearColor(new THREE.Color(val)))
             //planeMenu.add(model, "bgColor").listen().name("Background Color").onChange(val => renderer.setClearColor(new THREE.Color(val)))
-
             
 
             mmi = new MouseMeshInteraction(scene,camera);
