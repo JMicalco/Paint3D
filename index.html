@@ -59,7 +59,7 @@
             let geometry2 = new THREE.SphereGeometry();
             let geometry = new THREE.BoxGeometry();
             //let plane = new THREE.PlaneGeometry( 5, 20, 32 );
-            let material = new THREE.MeshBasicMaterial({color: "white", wireframe: true});
+            let material = new THREE.MeshBasicMaterial({color: "white", wireframe: true, opacity:0.5, transparent:true});
             mesh = new THREE.Mesh(plane, material);
             //mesh2 = new THREE.Mesh(geometry2, material);
             //mesh.name = "Object";
@@ -96,7 +96,7 @@
                 },
                 listColors: ["White", "Red", "Yellow"],
                 defaultItem: "White",
-                colorPalette: [1, 1, 1]
+                colorPalette: [1, 1, 1],
             }
 
             console.log(objectArr);
@@ -107,12 +107,13 @@
                 objects.cube=true;
                 objects.sphere=false;
                 objects.cone=false;
-                material = new THREE.MeshBasicMaterial({color: "white", wireframe: true});
+                material = new THREE.MeshBasicMaterial({color: "white", wireframe: true, opacity:0.5, transparent:true});
                 mesh = new THREE.Mesh(geometry, material);
                 //console.log(mesh.uuid);
                 mesh.name="cube";
                 scene.add(mesh);
                 objectArr.push(mesh);
+                chbWireframe.setValue(false);
                 //world.add(mesh);
             });
             let sphere = generalMenu.add(objects, "sphere").listen().name("Sphere").onChange(function() {
@@ -161,8 +162,13 @@
 
             // Appearance Menu
             let appearMenu = gui.addFolder("Model's Appearance Menu");
-            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe").onChange(function(value) {
-                mesh.material.wireframe=false;
+            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(false).name("Wireframe").listen().onChange(function(value) {
+                if (mesh.material.wireframe==true) {
+                    mesh.material.wireframe=false;
+                } else if(mesh.material.wireframe==false){
+                    mesh.material.wireframe=true;
+                }
+                
             });
             /*let listColors = appearMenu.add(model, "defaultItem", model.listColors).name("Color List").onChange(function(item) {
                 mesh.material.color = new THREE.Color(model.defaultItem.toLowerCase());
@@ -171,6 +177,11 @@
             let colorPalette = appearMenu.addColor(model, "colorPalette").name("Color Palette").listen().onChange(function(color) {
                 mesh.material.color = new THREE.Color(color[0]/255, color[1]/255, color[2]/255);
             });
+            
+            let transparency= appearMenu.add(mesh.material,"opacity").min(0.0).max(1.0).step(0.1).setValue(0.5).name("Opacity").listen().onChange(function(value) {
+                mesh.material.opacity = value;
+            });
+
 
 
 
@@ -188,6 +199,7 @@
             //Handler in case of cube
             mmi.addHandler("cube", "click",function(v) {
                 mesh=v;
+                
             });
 
             // ANIMATION
@@ -195,7 +207,7 @@
             
             // Appearance Menu
 
-
+            gui.updateDisplay();
             rotMenu.open();
             gui.close()
 
