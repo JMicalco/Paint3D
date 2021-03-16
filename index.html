@@ -97,6 +97,8 @@
                 listColors: ["White", "Red", "Yellow"],
                 defaultItem: "White",
                 colorPalette: [1, 1, 1],
+                showStats: true,
+                bgColor: 0x000,
             }
 
             console.log(objectArr);
@@ -188,11 +190,26 @@
             //Plane Menu
             let planeMenu=gui.addFolder("Plane");
             let chbPlaneHelper = planeMenu.add(planeHelper, "visible").setValue(false).name("PlaneHelper");
+            
 
             //Stats
             stats = new Stats();
             stats.showPanel(0); // FPS
             document.body.appendChild(stats.dom);
+            
+            //let chbShowStats = planeMenu.add(planeHelper,"visible").setValue(false).name("Show Stats");
+            let chbShowStats = planeMenu.add(model,"showStats").setValue(true).name("Show Stats")
+                .onChange(val => {
+                    if(val){
+                        stats.dom.style.display = 'block'
+                    }else{
+                        stats.dom.style.display = 'none'
+                    }
+                })
+            planeMenu.addColor(model, "bgColor").listen().name('Background Color').onChange(val => renderer.setClearColor(new THREE.Color(val)))
+            //planeMenu.add(model, "bgColor").listen().name("Background Color").onChange(val => renderer.setClearColor(new THREE.Color(val)))
+
+            
 
             mmi = new MouseMeshInteraction(scene,camera);
 
