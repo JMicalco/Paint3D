@@ -133,7 +133,7 @@ This is an example of how to list things you need to use the software and how to
     <img src="Images/Shape_Chars.png" alt="drawing" width="900" height="500"/>
 </p>
 
-### Plane and Bacground
+### Plane and Background
 
 1. Select Plane and Bacground from the right panel
 2. Click on PlaneHelper to activate/deactivate the plane
