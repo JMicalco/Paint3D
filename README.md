@@ -1,7 +1,8 @@
 <div id="top"></div>
 
-<!-- [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url] -->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Commit][commits-shield]][commits-url]
 
 <!-- [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -208,10 +209,12 @@ Project Link: [https://github.com/JMicalco/Paint3D](https://github.com/JMicalco/
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/JMicalco/Paint3D.svg?style=for-the-badge
 [contributors-url]: https://github.com/JMicalco/Paint3D/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/JMicalco/Paint3D.svg?style=for-the-badge
 [forks-url]: https://github.com/JMicalco/Paint3D/network/members
+[commits-shield]: https://img.shields.io/github/last-commit/JMicalco/Paint3D.svg?style=for-the-badge
+[commits-url]: https://github.com/JMicalco/Paint3D/graphs/commit-activity
 
 <!-- [stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
 [stars-url]: https://github.com/github_username/repo_name/stargazers
