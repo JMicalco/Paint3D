@@ -119,7 +119,7 @@ This is an example of how to list things you need to use the software and how to
 2. To move click and drag the object accordinly.
 
 <p align="center">
-    <img src="Images/Creation_Shape.png" alt="drawing" width="900" height="500"/>
+    <img src="Images/Create.gif" alt="drawing" width="900" height="500"/>
 </p>
 
 ### Available Object's Characteristics:
@@ -131,7 +131,7 @@ This is an example of how to list things you need to use the software and how to
 - Rotation (Y)
 
 <p align="center">
-    <img src="Images/Shape_Chars.png" alt="drawing" width="900" height="500"/>
+    <img src="Images/Characteristics.gif" alt="drawing" width="900" height="500"/>
 </p>
 
 ### Plane and Background
@@ -141,7 +141,7 @@ This is an example of how to list things you need to use the software and how to
 3. Choose from the palette color to change the bacground color
 
 <p align="center">
-    <img src="Images/Background.png" alt="drawing" width="900" height="500"/>
+    <img src="Images/background.gif" alt="drawing" width="900" height="500"/>
 </p>
 
 <!-- _For more examples, please refer to the [Documentation](https://example.com)_ -->
